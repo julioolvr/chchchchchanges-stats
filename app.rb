@@ -25,8 +25,8 @@ post '/stats' do
   animals_killed = params["animalsKilled"]
   years_lost = params["yearsLost"]
 
-  redis.hincrby 'stats', 'waterRaised', water_raised
-  redis.hincrby 'stats', 'iceMelted', ice_melted
+  redis.hincrbyfloat 'stats', 'waterRaised', water_raised
+  redis.hincrbyfloat 'stats', 'iceMelted', ice_melted
   redis.hincrby 'stats', 'animalsKilled', animals_killed
   redis.hincrby 'stats', 'yearsLost', years_lost
 
