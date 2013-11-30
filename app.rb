@@ -20,13 +20,13 @@ get '/stats' do
 end
 
 post '/stats' do
-  water_raised = params["waterRaised"]
-  ice_melted = params["iceMelted"]
-  animals_killed = params["animalsKilled"]
-  years_lost = params["yearsLost"]
+  water_raised = (params["waterRaised"].to_f * 10).to_i
+  ice_melted = (params["iceMelted"].to_f * 10).to_i
+  animals_killed = params["animalsKilled"].to_i
+  years_lost = params["yearsLost"].to_i
 
-  redis.hincrbyfloat 'stats', 'waterRaised', water_raised
-  redis.hincrbyfloat 'stats', 'iceMelted', ice_melted
+  redis.hincrby 'stats', 'waterRaised', water_raised
+  redis.hincrby 'stats', 'iceMelted', ice_melted
   redis.hincrby 'stats', 'animalsKilled', animals_killed
   redis.hincrby 'stats', 'yearsLost', years_lost
 
