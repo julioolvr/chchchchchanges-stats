@@ -1,6 +1,11 @@
 require 'sinatra'
+require 'sinatra/cross_origin'
 require 'json'
 require 'redis'
+
+configure do
+  enable :cross_origin
+end
 
 def redis
   @redis ||= begin
