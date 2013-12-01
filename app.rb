@@ -14,6 +14,10 @@ def redis
   end
 end
 
+def valid_stats(water_raised, ice_melted, animals_killed, years_lost)
+  water_raised >= 0 && ice_melted >= 0 && animals_killed >= 0 && years_lost >= 0 && years_lost <= 1800
+end
+
 get '/stats' do
   content_type :json
   redis.hgetall('stats').to_json
@@ -25,10 +29,15 @@ post '/stats' do
   animals_killed = params["animalsKilled"].to_i
   years_lost = params["yearsLost"].to_i
 
-  redis.hincrby 'stats', 'waterRaised', water_raised
-  redis.hincrby 'stats', 'iceMelted', ice_melted
-  redis.hincrby 'stats', 'animalsKilled', animals_killed
-  redis.hincrby 'stats', 'yearsLost', years_lost
+  if valid_stats(water_raised, ice_melted, animals_killed, years_lost)
+    redis.hincrby 'stats', 'waterRaised', water_raised
+    redis.hincrby 'stats', 'iceMelted', ice_melted
+    redis.hincrby 'stats', 'animalsKilled', animals_killed
+    redis.hincrby 'stats', 'yearsLost', years_lost
 
-  status 200
+    status 200
+  else
+    status 403
+  end
+
 end
